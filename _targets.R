@@ -8,6 +8,7 @@ library(targets)
 library(tarchetypes)
 library(crew)
 library(crew.cluster)
+library(geotargets)
 
 
 controller_10 <- crew::crew_controller_local(
@@ -17,38 +18,7 @@ controller_10 <- crew::crew_controller_local(
 
 controller_geo <- crew.cluster::crew_controller_slurm(
   name = "controller_geo",
-  workers = 10,
-  options_cluster = crew.cluster::crew_options_slurm(
-    verbose = TRUE,
-    script_lines = "apptainer shell container/container_samba.sif"
-  )
-)
-
-
-scriptlines_apptainer <- "apptainer"
-scriptlines_basedir <- "$PWD"
-scriptlines_targetdir <- "/ddn/gs1/home/marquesel/pipeline"
-scriptlines_inputdir <- "/ddn/gs1/home/marquesel/input"
-scriptlines_container <- "container/container_samba.sif"
-scriptlines_geo <- glue::glue(
-  "#SBATCH --job-name=samba \
-  #SBATCH --partition=geo \
-  #SBATCH --error=slurm_messages/slurm_%j.out \
-  {scriptlines_apptainer} exec --nv --env ",
-  "CUDA_VISIBLE_DEVICES=${{GPU_DEVICE_ORDINAL}} ",
-  "--bind {scriptlines_basedir}:/mnt ",
-  "--bind {scriptlines_basedir}/inst:/inst ",
-  "--bind {scriptlines_inputdir}:/input ",
-  "--bind {scriptlines_targetdir}/targets:/opt/_targets ",
-  "{scriptlines_container} \\"
-)
-controller_geo <- crew.cluster::crew_controller_slurm(
-  name = "controller_geo",
-  workers = 4,
-  options_cluster = crew.cluster::crew_options_slurm(
-    verbose = TRUE,
-    script_lines = scriptlines_geo
-  )
+  workers = 4
 )
 
 targets::tar_option_set(
@@ -90,20 +60,16 @@ tar_source()
 
 list(
   tar_target(
-    name = cs,
-    command = data.frame(
-      NAME = seq_len(6),
-      ts = rep(letters[seq_len(3)], each = 2),
-      POP2010 = seq_len(6)
-    ) |>
-      dplyr::group_by(NAME) |>
-      tar_group(),
-    iteration = "group"
+    name = input,
+    command = "./input/case_studies_list.csv",
+    format = "file"
   ),
   tar_target(
-    name = pop_calc,
-    command = sum(cs$POP2010),
-    pattern = map(cs),
-    iteration = "vector"
+    name = load_cs,
+    command = read.csv(input)
+  ),
+  tar_target(
+    name = city,
+    command = load_cs[1, ]$NAME
   )
 )

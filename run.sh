@@ -7,6 +7,5 @@
 #SBATCH --error=slurm_messages/slurm-%j.err
 
 #apptainer shell container/container_samba.sif
-#apptainer exec container/container_samba.sif
 apptainer exec container/container_samba.sif Rscript run.R
 #Rscript run.R
