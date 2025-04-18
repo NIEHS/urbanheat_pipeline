@@ -30,6 +30,7 @@ targets::tar_option_set(
     "lubridate",
     "mercury",
     "samba",
+    "sf",
     "targets"
   ),
   #imports = c( # keep track of these packages updates in the target pipeline
@@ -61,11 +62,6 @@ tar_source()
 list(
   tar_target(
     name = test,
-    command = as.character(list.dirs("/", recursive = FALSE)),
-    format = "rds"
-  ),
-  tar_target(
-    name = test2,
     command = as.character(
       list.dirs("/WU_IBM/", recursive = FALSE)
     ),
@@ -77,19 +73,18 @@ list(
     format = "file"
   ),
   tar_target(
-    name = load_cs,
-    command = read.csv(input)
-  ),
-  tar_target(
     name = my_cs,
-    command = load_cs |>
+    command = read.csv(input) |>
       dplyr::group_by(NAME, ts, te) |>
       tar_group(),
-    iteration = "group"
+    iteration = "group",
+    format = "rds"
   ),
-  tar_terra_vect(
-    name = cs_inv,
-    command = terra::vect(unique(my_cs$cws_inv_file)),
-    pattern = map(my_cs)
+  tar_target(
+    name = cs_brassens,
+    command = run_brassens(my_cs),
+    pattern = map(my_cs),
+    iteration = "list",
+    format = "rds",
   )
 )

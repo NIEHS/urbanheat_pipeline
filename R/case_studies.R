@@ -60,7 +60,7 @@ load_case_studies <- function() {
   cs
 }
 
-write.csv(load_case_studies()[1:3, ], "./input/case_studies_list.csv")
+write.csv(load_case_studies()[1:4, ], "./input/case_studies_list.csv")
 
 # work also with a group of cities
 open_area <- function(city) {
