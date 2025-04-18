@@ -15,12 +15,12 @@ load_case_studies <- function() {
   us_cities <- us_cities[order(us_cities$POP2010, decreasing = TRUE), ]
   cs <- us_cities[, c("NAME", "state", "POP2010")]
   cs$cws_inv_file <- paste0(
-    "./../../../group/set/WU_IBM/inventories/",
+    "/WU_IBM/inventories/",
     cs$state,
     ".csv"
   )
   cs$cws_folder <- paste0(
-    "./../../../group/set/WU_IBM/Output/",
+    "/WU_IBM/Output/",
     cs$state,
     "/"
   )

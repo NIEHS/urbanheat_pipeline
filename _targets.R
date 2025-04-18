@@ -60,6 +60,18 @@ tar_source()
 
 list(
   tar_target(
+    name = test,
+    command = as.character(list.dirs("/", recursive = FALSE)),
+    format = "rds"
+  ),
+  tar_target(
+    name = test2,
+    command = as.character(
+      list.dirs("/WU_IBM/", recursive = FALSE)
+    ),
+    format = "rds"
+  ),
+  tar_target(
     name = input,
     command = "./input/case_studies_list.csv",
     format = "file"
@@ -69,7 +81,15 @@ list(
     command = read.csv(input)
   ),
   tar_target(
-    name = city,
-    command = load_cs[1, ]$NAME
+    name = my_cs,
+    command = load_cs |>
+      dplyr::group_by(NAME, ts, te) |>
+      tar_group(),
+    iteration = "group"
+  ),
+  tar_terra_vect(
+    name = cs_inv,
+    command = terra::vect(unique(my_cs$cws_inv_file)),
+    pattern = map(my_cs)
   )
 )

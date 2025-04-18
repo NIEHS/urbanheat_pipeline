@@ -30,10 +30,8 @@ From: rocker/geospatial:latest
     export LANG=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
 
-    # Create directories
-    mkdir /pipeline
-    mkdir /input
-    mkdir /opt/_targets
+    # create directories for Weather_Underground data 
+    mkdir /WU_IBM 
 
     # Install R packages
     Rscript -e "install.packages(c('pak', 'devtools'))"
