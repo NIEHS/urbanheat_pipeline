@@ -18,7 +18,7 @@ controller_10 <- crew::crew_controller_local(
 
 controller_geo <- crew.cluster::crew_controller_slurm(
   name = "controller_geo",
-  workers = 4
+  workers = 10
 )
 
 targets::tar_option_set(
@@ -60,13 +60,6 @@ targets::tar_option_set(
 tar_source()
 
 list(
-  tar_target(
-    name = test,
-    command = as.character(
-      list.dirs("/WU_IBM/", recursive = FALSE)
-    ),
-    format = "rds"
-  ),
   tar_target(
     name = input,
     command = "./input/case_studies_list.csv",
