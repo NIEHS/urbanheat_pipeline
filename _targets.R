@@ -73,10 +73,40 @@ list(
     iteration = "group",
     format = "rds"
   ),
+  # tar_target(
+  #   area_rect,
+  #   if (!file.exists(paste0("./input/", my_cs$NAME, ".shp"))) {
+  #     terra::writeVector(
+  #       open_area(my_cs$NAME)$area_rect,
+  #       paste0("./input/", my_cs$NAME, ".shp")
+  #     )
+  #   },
+  #   pattern = map(my_cs),
+  #   iteration = "list"
+  # ),
+  geotargets::tar_terra_vect(
+    cs_shp,
+    open_area(my_cs$NAME)$plot_shp,
+    pattern = map(my_cs)
+  ),
   tar_target(
     name = cs_brassens,
     command = run_brassens(my_cs),
     pattern = map(my_cs),
+    iteration = "list",
+    format = "rds",
+  ),
+  # tar_target(
+  #   name = cs_samba,
+  #   command = run_samba(my_cs, cs_brassens, cs_shp),
+  #   pattern = map(my_cs, cs_brassens, cs_shp),
+  #   iteration = "list",
+  #   format = "rds",
+  # )
+  tar_target(
+    name = cs_samba,
+    command = debug_samba(my_cs, cs_brassens),
+    pattern = map(my_cs, cs_brassens),
     iteration = "list",
     format = "rds",
   )

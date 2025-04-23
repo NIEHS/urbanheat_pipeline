@@ -23,5 +23,15 @@ run_brassens <- function(my_cs) {
     m5_keep_isolated = TRUE
   )
   wu_cc_ghcnh <- brassens::calib_cws(wu_c, ref = ghcnh, max_dist = 5000)
-  list(ghcnh, wu, wu_f, wu_c, wu_cc_ghcnh)
+  if (nrow(wu_cc_ghcnh$obs) == 0) {
+    # if it is still null, let's keep wu_c observations
+    wu_cc_ghcnh$obs <- wu_c
+    # add missing columns
+    wu_cc_ghcnh$obs$utc <- lubridate::hour(wu_cc_ghcnh$obs$time)
+    wu_cc_ghcnh$obs$geometry <- NULL
+    wu_cc_ghcnh$obs$bias_med <- NA
+    wu_cc_ghcnh$obs$bias_mean <- NA
+    wu_cc_ghcnh$obs$sd <- NA
+  }
+  list("ghcnh" = ghcnh, "wu_brassens" = wu_cc_ghcnh)
 }
