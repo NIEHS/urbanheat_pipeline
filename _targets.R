@@ -109,9 +109,9 @@ list(
     rasterize_mean(my_cs, cs_samba),
     pattern = map(my_cs, cs_samba)
   ),
-  geotargets::tar_terra_rast(
-    cs_raster_sd,
-    rasterize_sd(my_cs, cs_samba),
-    pattern = map(my_cs, cs_samba)
-  )
+  # geotargets::tar_terra_rast(
+  #   cs_raster_sd,
+  #   rasterize_sd(my_cs, cs_samba),
+  #   pattern = map(my_cs, cs_samba)
+  # )
 )
