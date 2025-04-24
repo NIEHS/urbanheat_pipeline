@@ -33,11 +33,6 @@ targets::tar_option_set(
     "sf",
     "targets"
   ),
-  #imports = c( # keep track of these packages updates in the target pipeline
-  #  "brassens",
-  #  "mercury",
-  #  "samba"
-  #),
   repository = "local",
   error = "continue",
   memory = "transient",
@@ -54,7 +49,6 @@ targets::tar_option_set(
   ),
   retrieval = "worker"
 )
-
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
@@ -84,11 +78,11 @@ list(
   #   pattern = map(my_cs),
   #   iteration = "list"
   # ),
-  geotargets::tar_terra_vect(
-    cs_shp,
-    open_area(my_cs$NAME)$plot_shp,
-    pattern = map(my_cs)
-  ),
+  # geotargets::tar_terra_vect(
+  #   cs_shp,
+  #   open_area(my_cs$NAME)$plot_shp,
+  #   pattern = map(my_cs)
+  # ),
   tar_target(
     name = cs_brassens,
     command = run_brassens(my_cs),
@@ -96,18 +90,28 @@ list(
     iteration = "list",
     format = "rds",
   ),
-  # tar_target(
-  #   name = cs_samba,
-  #   command = run_samba(my_cs, cs_brassens, cs_shp),
-  #   pattern = map(my_cs, cs_brassens, cs_shp),
-  #   iteration = "list",
-  #   format = "rds",
-  # )
   tar_target(
-    name = cs_samba,
-    command = debug_samba(my_cs, cs_brassens),
+    name = cs_bhm_materials,
+    command = bhm_materials(my_cs, cs_brassens),
     pattern = map(my_cs, cs_brassens),
     iteration = "list",
     format = "rds",
+  ),
+  tar_target(
+    name = cs_samba,
+    command = run_samba(my_cs, cs_bhm_materials),
+    pattern = map(my_cs, cs_bhm_materials),
+    iteration = "list",
+    format = "rds"
+  ),
+  geotargets::tar_terra_rast(
+    cs_raster_mean,
+    rasterize_mean(my_cs, cs_samba),
+    pattern = map(my_cs, cs_samba)
+  ),
+  geotargets::tar_terra_rast(
+    cs_raster_sd,
+    rasterize_sd(my_cs, cs_samba),
+    pattern = map(my_cs, cs_samba)
   )
 )
