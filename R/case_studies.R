@@ -31,10 +31,10 @@ load_case_studies <- function() {
   # month ever recorded in the United States of America
   cs$ts <- as.POSIXct("2023-07-01 00:00:00", tz = "UTC")
   cs$te <- as.POSIXct("2023-07-31 23:00:00", tz = "UTC")
-  # san francisco - study oct. 2023
+  # los angeles - study oct. 2023
   cs[2, ]$ts <- as.POSIXct("2023-10-01 00:00:00", tz = "UTC")
-  #cs[2, ]$te <- as.POSIXct("2023-10-31 23:00:00", tz = "UTC")
-  cs[2, ]$te <- as.POSIXct("2023-10-02 23:00:00", tz = "UTC")
+  cs[2, ]$te <- as.POSIXct("2023-10-31 23:00:00", tz = "UTC")
+  #cs[2, ]$te <- as.POSIXct("2023-10-02 23:00:00", tz = "UTC")
   # chicago - study feb. 2021 (really cold)
   cs[3, ]$ts <- as.POSIXct("2021-02-01 00:00:00", tz = "UTC")
   #cs[3, ]$te <- as.POSIXct("2021-02-28 23:00:00", tz = "UTC")

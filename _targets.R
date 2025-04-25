@@ -18,7 +18,7 @@ controller_10 <- crew::crew_controller_local(
 
 controller_geo <- crew.cluster::crew_controller_slurm(
   name = "controller_geo",
-  workers = 10
+  workers = 30
 )
 
 targets::tar_option_set(
@@ -109,9 +109,9 @@ list(
     rasterize_mean(my_cs, cs_samba),
     pattern = map(my_cs, cs_samba)
   ),
-  # geotargets::tar_terra_rast(
-  #   cs_raster_sd,
-  #   rasterize_sd(my_cs, cs_samba),
-  #   pattern = map(my_cs, cs_samba)
-  # )
+  geotargets::tar_terra_rast(
+    cs_raster_sd,
+    rasterize_sd(my_cs, cs_samba),
+    pattern = map(my_cs, cs_samba)
+  )
 )

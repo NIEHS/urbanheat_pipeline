@@ -23,7 +23,7 @@ rasterize_mean <- function(my_cs, cs_samba) {
       "_",
       format(my_cs$ts, "%Y%m%d%H"),
       "_",
-      format(my_cs$ts, "%Y%m%d%H"),
+      format(my_cs$te, "%Y%m%d%H"),
       ".tif"
     ),
     overwrite = TRUE
@@ -32,6 +32,8 @@ rasterize_mean <- function(my_cs, cs_samba) {
 }
 
 rasterize_sd <- function(my_cs, cs_samba) {
+  my_cs$ts <- as.POSIXct(my_cs$ts, tz = "UTC")
+  my_cs$te <- as.POSIXct(my_cs$te, tz = "UTC")
   pred_sd <- samba::rasterize_pred(cs_samba$pred, varname = "pred_sd")
   save_folder <- paste0(
     "./output/",
@@ -54,7 +56,7 @@ rasterize_sd <- function(my_cs, cs_samba) {
       "_",
       format(my_cs$ts, "%Y%m%d%H"),
       "_",
-      format(my_cs$ts, "%Y%m%d%H"),
+      format(my_cs$te, "%Y%m%d%H"),
       ".tif"
     ),
     overwrite = TRUE
