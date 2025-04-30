@@ -4,7 +4,7 @@ run_samba <- function(my_cs, cs_bhm_materials) {
   inf_out <- samba::inference(
     cs_bhm_materials$cws,
     cs_bhm_materials$pred,
-    polygon = open_area(my_cs$NAME)$plot_shp,
+    polygon = open_area(my_cs$NAME, my_cs$ST)$plot_shp,
     my_cs$ts,
     my_cs$te,
     verbose = TRUE,

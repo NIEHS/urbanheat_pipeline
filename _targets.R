@@ -18,7 +18,7 @@ controller_10 <- crew::crew_controller_local(
 
 controller_geo <- crew.cluster::crew_controller_slurm(
   name = "controller_geo",
-  workers = 30
+  workers = 60
 )
 
 targets::tar_option_set(
@@ -62,27 +62,18 @@ list(
   tar_target(
     name = my_cs,
     command = read.csv(input) |>
-      dplyr::group_by(NAME, ts, te) |>
+      dplyr::group_by(NAME, ST, ts, te) |>
       tar_group(),
     iteration = "group",
     format = "rds"
   ),
-  # tar_target(
-  #   area_rect,
-  #   if (!file.exists(paste0("./input/", my_cs$NAME, ".shp"))) {
-  #     terra::writeVector(
-  #       open_area(my_cs$NAME)$area_rect,
-  #       paste0("./input/", my_cs$NAME, ".shp")
-  #     )
-  #   },
-  #   pattern = map(my_cs),
-  #   iteration = "list"
-  # ),
-  # geotargets::tar_terra_vect(
-  #   cs_shp,
-  #   open_area(my_cs$NAME)$plot_shp,
-  #   pattern = map(my_cs)
-  # ),
+  tar_target(
+    name = cs_brassens_city,
+    command = paste(my_cs$NAME, my_cs$ST),
+    pattern = map(my_cs),
+    iteration = "list",
+    format = "rds",
+  ),
   tar_target(
     name = cs_brassens,
     command = run_brassens(my_cs),
@@ -91,9 +82,23 @@ list(
     format = "rds",
   ),
   tar_target(
+    name = cs_bhm_mat_city,
+    command = paste(my_cs$NAME, my_cs$ST),
+    pattern = map(my_cs, cs_brassens),
+    iteration = "list",
+    format = "rds",
+  ),
+  tar_target(
     name = cs_bhm_materials,
     command = bhm_materials(my_cs, cs_brassens),
     pattern = map(my_cs, cs_brassens),
+    iteration = "list",
+    format = "rds",
+  ),
+  tar_target(
+    name = cs_samba_city,
+    command = paste(my_cs$NAME, my_cs$ST),
+    pattern = map(my_cs, cs_bhm_materials),
     iteration = "list",
     format = "rds",
   ),
