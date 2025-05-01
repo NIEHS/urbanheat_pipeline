@@ -8,7 +8,7 @@ rasterize_mean <- function(my_cs, cs_samba) {
     "_",
     format(my_cs$ts, "%Y%m%d%H"),
     "_",
-    format(my_cs$ts, "%Y%m%d%H"),
+    format(my_cs$te, "%Y%m%d%H"),
     "/"
   )
   if (!dir.exists(save_folder)) {
@@ -41,7 +41,7 @@ rasterize_sd <- function(my_cs, cs_samba) {
     "_",
     format(my_cs$ts, "%Y%m%d%H"),
     "_",
-    format(my_cs$ts, "%Y%m%d%H"),
+    format(my_cs$te, "%Y%m%d%H"),
     "/"
   )
   if (!dir.exists(save_folder)) {

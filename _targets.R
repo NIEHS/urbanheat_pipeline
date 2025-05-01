@@ -11,14 +11,14 @@ library(crew.cluster)
 library(geotargets)
 
 
-controller_10 <- crew::crew_controller_local(
-  name = "controller_10",
-  workers = 10
+controller_30 <- crew::crew_controller_local(
+  name = "controller_30",
+  workers = 30
 )
 
 controller_geo <- crew.cluster::crew_controller_slurm(
   name = "controller_geo",
-  workers = 60
+  workers = 100
 )
 
 targets::tar_option_set(
@@ -42,10 +42,10 @@ targets::tar_option_set(
   garbage_collection = TRUE,
   seed = 202401L,
   controller = crew::crew_controller_group(
-    controller_geo, controller_10
+    controller_geo, controller_30
   ),
   resources = targets::tar_resources(
-    crew = targets::tar_resources_crew(controller = "controller_10")
+    crew = targets::tar_resources_crew(controller = "controller_30")
   ),
   retrieval = "worker"
 )

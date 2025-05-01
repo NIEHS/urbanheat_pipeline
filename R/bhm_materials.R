@@ -21,7 +21,7 @@ bhm_materials <- function(my_cs, cs_brassens) {
   input$imp <- terra::rast(my_cs$imp_file)
   input$era5_instant <- terra::rast(my_cs$era5_instant_file)
   input$era5_accum <- terra::rast(my_cs$era5_accum_file)
-  input$area_shp <- open_area(my_cs$NAME, my_cs$ST)$plot_shp
+  input$area_shp <- open_area(my_cs$NAME, my_cs$ST)$area_rect
   input$ts <- as.POSIXct(my_cs$ts, tz = "UTC", format = "%Y-%m-%d %H:%M:%S")
   input$te <- as.POSIXct(my_cs$te, tz = "UTC", format = "%Y-%m-%d %H:%M:%S")
   samba::check_input(input)
