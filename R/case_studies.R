@@ -1,7 +1,7 @@
 # The objective of this script is to create a .csv with a list of case studies
 # Note: for ERA5 download - us extent: -126, -66, 24, 50
 source("./R/cs_helene_hurricane.R")
-load_cs_cities <- function() {
+load_cs_cities <- function(ts, te) {
   us_cities <- terra::vect(
     "./input/500Cities_City_11082016/CityBoundaries.shp"
   )
@@ -27,19 +27,8 @@ load_cs_cities <- function() {
   cs$elev_file <- "./input/gmted_medianstat_7-5arcsec.tif"
   cs$imp_file <- "./input/nlcd_2021_impervious_l48_20230630.img"
   cs$fch_file <- "./input/forest_height_2019_nam.tif"
-  # July 2023 is chosen by default as it is the hottest
-  # month ever recorded in the United States of America
-  cs$ts <- as.POSIXct("2023-07-01 00:00:00", tz = "UTC")
-  cs$te <- as.POSIXct("2023-07-31 23:00:00", tz = "UTC")
-  # los angeles - study oct. 2023
-  cs[2, ]$ts <- as.POSIXct("2023-10-01 00:00:00", tz = "UTC")
-  cs[2, ]$te <- as.POSIXct("2023-10-31 23:00:00", tz = "UTC")
-  # chicago - study feb. 2021 (really cold)
-  cs[3, ]$ts <- as.POSIXct("2021-02-01 00:00:00", tz = "UTC")
-  cs[3, ]$te <- as.POSIXct("2021-02-28 23:00:00", tz = "UTC")
-  # houston - study june 2023 (power outage + heatwave)
-  cs[4, ]$ts <- as.POSIXct("2023-06-01 00:00:00", tz = "UTC")
-  cs[4, ]$te <- as.POSIXct("2023-06-30 23:00:00", tz = "UTC")
+  cs$ts <- ts
+  cs$te <- te
   cs$era5_instant_file <- paste0(
     "./input/era5_us_",
     lubridate::year(cs$ts),
@@ -57,7 +46,7 @@ load_cs_cities <- function() {
   cs
 }
 
-load_cs_states <- function() {
+load_cs_states <- function(ts, te) {
   us_states <- terra::vect(
     "./input/cb_2018_us_state_5m/cb_2018_us_state_5m.shp"
   )
@@ -83,10 +72,8 @@ load_cs_states <- function() {
   cs$elev_file <- "./input/gmted_medianstat_7-5arcsec.tif"
   cs$imp_file <- "./input/nlcd_2021_impervious_l48_20230630.img"
   cs$fch_file <- "./input/forest_height_2019_nam.tif"
-  # July 2023 is chosen by default as it is the hottest
-  # month ever recorded in the United States of America
-  cs$ts <- as.POSIXct("2023-07-01 00:00:00", tz = "UTC")
-  cs$te <- as.POSIXct("2023-07-31 23:00:00", tz = "UTC")
+  cs$ts <- ts
+  cs$te <- te
   cs$era5_instant_file <- paste0(
     "./input/era5_us_",
     lubridate::year(cs$ts),
@@ -104,11 +91,42 @@ load_cs_states <- function() {
   as.data.frame(cs)
 }
 
-
-cs_cities <- load_cs_cities()[1:100, ]
-cs_cities <- cs_cities[(which(cs_cities$NAME != "Washington")), ] # no data
-cs_list <- append_helene(cs_cities)
-cs_states <- load_cs_states()
-cs_states <- cs_states[which(cs_states$ST == "NC"), ]
-cs_list <- rbind(cs_list, cs_states)
+# July 2023 is chosen by default as it is the hottest
+# month ever recorded in the United States of America
+cs_jul23 <- load_cs_cities(
+  as.POSIXct("2023-07-01 00:00:00", tz = "UTC"),
+  as.POSIXct("2023-07-31 23:00:00", tz = "UTC")
+)[1:100, ]
+cs_jul23 <- cs_jul23[(which(cs_jul23$NAME != "Washington")), ] # no data
+# February 2021 blizzard
+cs_feb21 <- load_cs_cities(
+  as.POSIXct("2021-02-01 00:00:00", tz = "UTC"),
+  as.POSIXct("2021-02-28 23:00:00", tz = "UTC")
+)[1:100, ]
+cs_feb21 <- cs_feb21[(which(cs_feb21$NAME != "Washington")), ] # no data
+# April 2024
+cs_apr24 <- load_cs_cities(
+  as.POSIXct("2024-04-01 00:00:00", tz = "UTC"),
+  as.POSIXct("2024-04-30 23:00:00", tz = "UTC")
+)[1:100, ]
+cs_apr24 <- cs_apr24[(which(cs_apr24$NAME != "Washington")), ] # no data
+cs_list <- rbind(cs_jul23, cs_feb21, cs_apr24)
 write.csv(cs_list, "./input/case_studies_list.csv")
+# October 2020
+cs_oct20 <- load_cs_cities(
+  as.POSIXct("2020-10-01 00:00:00", tz = "UTC"),
+  as.POSIXct("2020-10-31 23:00:00", tz = "UTC")
+)[1:100, ]
+cs_oct20 <- cs_oct20[(which(cs_oct20$NAME != "Washington")), ] # no data
+cs_list <- rbind(cs_jul23, cs_feb21, cs_apr24, cs_oct20)
+write.csv(cs_list, "./input/case_studies_list.csv")
+
+
+# for now these case studies are too long to run.
+# cs_list <- append_helene(cs_cities)
+# cs_states <- load_cs_states(
+#   as.POSIXct("2023-07-01 00:00:00", tz = "UTC"),
+#   as.POSIXct("2023-07-31 23:00:00", tz = "UTC")
+# )
+# cs_states <- cs_states[which(cs_states$ST == "CO"), ]
+# cs_states <- cs_states[which(cs_states$ST == "NC"), ]
