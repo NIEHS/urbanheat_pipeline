@@ -13,7 +13,7 @@ library(geotargets)
 
 controller_30 <- crew::crew_controller_local(
   name = "controller_30",
-  workers = 30
+  workers = 50
 )
 
 controller_geo <- crew.cluster::crew_controller_slurm(
