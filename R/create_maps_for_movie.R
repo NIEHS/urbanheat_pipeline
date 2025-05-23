@@ -229,7 +229,7 @@ save_maps_uhi(
 cat("images created \n")
 
 uhi <- temp - terra::global(temp, "mean", na.rm = TRUE)$mean
-uhi_avg <- terra::mean(uhi)
+uhi_avg <- terra::mean(uhi, na.rm = TRUE)
 if (is(shape, "SpatVector")) {
   p <- map_uhi_avg(uhi_avg) +
     tidyterra::geom_spatvector(

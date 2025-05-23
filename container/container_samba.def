@@ -48,6 +48,9 @@ From: rocker/geospatial:latest
     Rscript -e "pak::pak('shikokuchuo/mirai')"
     Rscript -e "pak::pak('wlandau/crew'); pak::pak('wlandau/crew.cluster')"
     Rscript -e "pak::pak('NIEHS/amadeus')"
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/terra/terra_1.7-78.tar.gz', repos = NULL, type = 'source')"
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/tidyterra/tidyterra_0.6.1.tar.gz', repos = NULL, type = 'source')"
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.5.1.tar.gz', repos = NULL, type = 'source')"
 
 %environment
     # Set locale for the container environment
