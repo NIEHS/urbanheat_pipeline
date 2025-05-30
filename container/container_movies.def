@@ -24,10 +24,17 @@ From: rocker/geospatial:latest
     export LC_ALL=en_US.UTF-8
 
     # Install R packages
+    Rscript -e "install.packages(c('pak', 'devtools'))"
+    Rscript -e "devtools::install_version('targets', version = '1.10.0')"
+    Rscript -e "install.packages('geotargets', \
+        repos = c('https://ropensci.r-universe.dev', 'https://cran.r-project.org'))"
+    Rscript -e "install.packages(c('tarchetypes'))"
+    Rscript -e "pak::pak('wlandau/crew'); pak::pak('wlandau/crew.cluster')"
+    Rscript -e "install.packages(c('latex2exp', 'ggspatial'))"
     Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/terra/terra_1.7-78.tar.gz', repos = NULL, type = 'source')"
     Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/tidyterra/tidyterra_0.6.1.tar.gz', repos = NULL, type = 'source')"
     Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_3.5.1.tar.gz', repos = NULL, type = 'source')"    
-    Rscript -e "install.packages(c('latex2exp', 'ggspatial'))"
+    
     
 %environment
     # Set locale for the container environment

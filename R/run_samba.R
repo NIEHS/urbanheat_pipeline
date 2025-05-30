@@ -10,20 +10,7 @@ run_samba <- function(my_cs, cs_bhm_materials) {
     verbose = TRUE,
     debug = TRUE
   )
+  inf_out$city <- my_cs$NAME
+  inf_out$state <- my_cs$ST
   inf_out
-
-#   terra::writeRaster(
-#     x = output$pred_sd,
-#     file = paste0(
-#       save_folder,
-#       "inference_predsd_",
-#       my_cs$NAME,
-#       "_",
-#       format(my_cs$ts, "%Y%m%d%H"),
-#       "_",
-#       format(my_cs$ts, "%Y%m%d%H"),
-#       ".tif"
-#     )
-#   )
-  # output
 }

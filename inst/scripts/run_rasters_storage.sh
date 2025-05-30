@@ -6,8 +6,8 @@
 #SBATCH --output=slurm_messages/slurm-%j.out
 #SBATCH --error=slurm_messages/slurm-%j.err
 
-echo "Creating samba data"
-sbatch --wait inst/scripts/run_data_creation.sh
 
-echo "Manipulating rasters"
-sbatch --wait inst/scripts/run_rasters_storage.sh
+export CONTAINER=movies
+
+apptainer exec \
+  container/container_movies.sif Rscript inst/targets/target_run.R

@@ -1,13 +1,11 @@
 bhm_materials <- function(my_cs, cs_brassens) {
   my_cs$ts <- as.POSIXct(my_cs$ts, tz = "UTC")
-  my_cs$te <- as.POSIXct(my_cs$te, tz = "UTC")
+  my_cs$te <- as.POSIXct(my_cs$te, tz = "UTC")  
   save_folder <- paste0(
     "./output/",
     gsub(" ", "_", tolower(my_cs$NAME)),
     "_",
-    format(my_cs$ts, "%Y%m%d%H"),
-    "_",
-    format(my_cs$te, "%Y%m%d%H"),
+    format(my_cs$ts, "%Y%m"),
     "/"
   )
   if (!dir.exists(save_folder)) {

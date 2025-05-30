@@ -16,7 +16,7 @@ OUTPUT_FILENAME="boston_202307"
 UHI_RANGE=10
 
 apptainer exec container/container_movies.sif bash -c "
-  Rscript R/create_maps_for_movie.R \"$RASTER_FILE\" \"$SHAPE_FILE\" \"$TIMEZONE\" \"$START_DATE\" \"$END_DATE\" \"$OUTPUT_DIR\"/temporary_\"$OUTPUT_FILENAME\" \"$UHI_RANGE\" \"$OUTPUT_FILENAME\" &&
+  Rscript create_maps_for_movie.R \"$RASTER_FILE\" \"$SHAPE_FILE\" \"$TIMEZONE\" \"$START_DATE\" \"$END_DATE\" \"$OUTPUT_DIR\"/temporary_\"$OUTPUT_FILENAME\" \"$UHI_RANGE\" \"$OUTPUT_FILENAME\" &&
   ffmpeg -y -framerate 10 -i "$OUTPUT_DIR"/temporary_"$OUTPUT_FILENAME"/%d.png -c:v libx264 -pix_fmt yuv420p "$OUTPUT_DIR"/"$OUTPUT_FILENAME".mp4
   rm -r "$OUTPUT_DIR"/temporary_"$OUTPUT_FILENAME"
 "

@@ -21,17 +21,28 @@ controller_geo <- crew.cluster::crew_controller_slurm(
   workers = 100
 )
 
-targets::tar_option_set(
-  packages = c(
+
+if (Sys.getenv("CONTAINER") == "samba") {
+  spec_packages <- c(
     "amadeus",
     "brassens",
-    "crew.cluster",
-    "data.table",
-    "lubridate",
     "mercury",
-    "samba",
-    "sf",
-    "targets"
+    "samba"
+  )
+} else {
+  spec_packages <- c("terra", "tidyterra")
+}
+
+targets::tar_option_set(
+  packages = c(
+    spec_packages,
+    c(
+      "crew.cluster",
+      "data.table",
+      "lubridate",
+      "sf",
+      "targets"
+    )
   ),
   repository = "local",
   error = "continue",
@@ -51,72 +62,15 @@ targets::tar_option_set(
 )
 
 # Run the R scripts in the R/ folder with your custom functions:
-tar_source()
+targets::tar_source()
+targets::tar_source("inst/targets/target_data_creation.R")
+targets::tar_source("inst/targets/target_rasters_storage.R")
+
+if (Sys.getenv("CONTAINER") == "samba") {
+  target_rasters_storage <- list()
+}
 
 list(
-  tar_target(
-    name = input,
-    command = "./input/case_studies_list.csv",
-    format = "file"
-  ),
-  tar_target(
-    name = my_cs,
-    command = read.csv(input) |>
-      dplyr::group_by(NAME, ST, ts, te) |>
-      tar_group(),
-    iteration = "group",
-    format = "rds"
-  ),
-  tar_target(
-    name = cs_brassens_city,
-    command = paste(my_cs$NAME, my_cs$ST),
-    pattern = map(my_cs),
-    iteration = "list",
-    format = "rds",
-  ),
-  tar_target(
-    name = cs_brassens,
-    command = run_brassens(my_cs),
-    pattern = map(my_cs),
-    iteration = "list",
-    format = "rds",
-  ),
-  tar_target(
-    name = cs_bhm_mat_city,
-    command = paste(my_cs$NAME, my_cs$ST),
-    pattern = map(my_cs, cs_brassens),
-    iteration = "list",
-    format = "rds",
-  ),
-  tar_target(
-    name = cs_bhm_materials,
-    command = bhm_materials(my_cs, cs_brassens),
-    pattern = map(my_cs, cs_brassens),
-    iteration = "list",
-    format = "rds",
-  ),
-  tar_target(
-    name = cs_samba_city,
-    command = paste(my_cs$NAME, my_cs$ST),
-    pattern = map(my_cs, cs_bhm_materials),
-    iteration = "list",
-    format = "rds",
-  ),
-  tar_target(
-    name = cs_samba,
-    command = run_samba(my_cs, cs_bhm_materials),
-    pattern = map(my_cs, cs_bhm_materials),
-    iteration = "list",
-    format = "rds"
-  ),
-  geotargets::tar_terra_rast(
-    cs_raster_mean,
-    rasterize_mean(my_cs, cs_samba),
-    pattern = map(my_cs, cs_samba)
-  ),
-  geotargets::tar_terra_rast(
-    cs_raster_sd,
-    rasterize_sd(my_cs, cs_samba),
-    pattern = map(my_cs, cs_samba)
-  )
+  target_data_creation,
+  target_rasters_storage
 )
