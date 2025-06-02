@@ -96,19 +96,19 @@ load_cs_states <- function(ts, te) {
 cs_jul23 <- load_cs_cities(
   as.POSIXct("2023-07-01 00:00:00", tz = "UTC"),
   as.POSIXct("2023-07-31 23:00:00", tz = "UTC")
-)[1:100, ]
+)[1:101, ]
 cs_jul23 <- cs_jul23[(which(cs_jul23$NAME != "Washington")), ] # no data
 # February 2021 blizzard
 cs_feb21 <- load_cs_cities(
   as.POSIXct("2021-02-01 00:00:00", tz = "UTC"),
   as.POSIXct("2021-02-28 23:00:00", tz = "UTC")
-)[1:100, ]
+)[1:101, ]
 cs_feb21 <- cs_feb21[(which(cs_feb21$NAME != "Washington")), ] # no data
 # April 2024
 cs_apr24 <- load_cs_cities(
   as.POSIXct("2024-04-01 00:00:00", tz = "UTC"),
   as.POSIXct("2024-04-30 23:00:00", tz = "UTC")
-)[1:100, ]
+)[1:101, ]
 cs_apr24 <- cs_apr24[(which(cs_apr24$NAME != "Washington")), ] # no data
 cs_list <- rbind(cs_jul23, cs_feb21, cs_apr24)
 write.csv(cs_list, "./input/case_studies_list.csv")
@@ -116,9 +116,16 @@ write.csv(cs_list, "./input/case_studies_list.csv")
 cs_oct20 <- load_cs_cities(
   as.POSIXct("2020-10-01 00:00:00", tz = "UTC"),
   as.POSIXct("2020-10-31 23:00:00", tz = "UTC")
-)[1:100, ]
+)[1:101, ]
 cs_oct20 <- cs_oct20[(which(cs_oct20$NAME != "Washington")), ] # no data
-cs_list <- rbind(cs_jul23, cs_feb21, cs_apr24, cs_oct20)
+# July 2024
+cs_jul24 <- load_cs_cities(
+  as.POSIXct("2024-07-01 00:00:00", tz = "UTC"),
+  as.POSIXct("2024-07-31 23:00:00", tz = "UTC")
+)[1:101, ]
+cs_jul24 <- cs_jul24[(which(cs_jul24$NAME != "Washington")), ] # no data
+
+cs_list <- rbind(cs_jul23, cs_feb21, cs_apr24, cs_oct20, cs_jul24)
 write.csv(cs_list, "./input/case_studies_list.csv")
 
 

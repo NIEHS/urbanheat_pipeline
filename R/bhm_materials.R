@@ -3,7 +3,7 @@ bhm_materials <- function(my_cs, cs_brassens) {
   my_cs$te <- as.POSIXct(my_cs$te, tz = "UTC")
   save_folder <- paste0(
     "./output/",
-    gsub(" ", "_", tolower(my_cs$NAME)),
+    gsub("[.]", "", gsub("[ ]", "_", tolower(my_cs$NAME))),
     "_",
     format(my_cs$ts, "%Y%m"),
     "/"
