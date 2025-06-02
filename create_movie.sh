@@ -9,8 +9,6 @@
 RASTER_FILE="./output/boston_2023070100_2023073123/inference_predmean_boston_2023070100_2023073123.tif"
 SHAPE_FILE="./input/shapes/NTAD_North_American_Roads_-6941702301048783378/North_American_Roads.shp"
 TIMEZONE="UTC"
-START_DATE="2023-07-01 00:00:00"
-END_DATE="2023-07-31 23:00:00"
 OUTPUT_DIR="my_movies"
 OUTPUT_FILENAME="boston_202307"
 UHI_RANGE=10

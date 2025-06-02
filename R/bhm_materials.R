@@ -1,6 +1,6 @@
 bhm_materials <- function(my_cs, cs_brassens) {
   my_cs$ts <- as.POSIXct(my_cs$ts, tz = "UTC")
-  my_cs$te <- as.POSIXct(my_cs$te, tz = "UTC")  
+  my_cs$te <- as.POSIXct(my_cs$te, tz = "UTC")
   save_folder <- paste0(
     "./output/",
     gsub(" ", "_", tolower(my_cs$NAME)),
