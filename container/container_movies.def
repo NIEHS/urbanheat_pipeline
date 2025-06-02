@@ -29,7 +29,9 @@ From: rocker/geospatial:latest
     Rscript -e "install.packages('geotargets', \
         repos = c('https://ropensci.r-universe.dev', 'https://cran.r-project.org'))"
     Rscript -e "install.packages(c('tarchetypes'))"
-    Rscript -e "pak::pak('wlandau/crew'); pak::pak('wlandau/crew.cluster')"
+    Rscript -e "install.packages(c('lutz'))"
+    Rscript -e "pak::pak('wlandau/crew')"
+    Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/crew.cluster/crew.cluster_0.3.4.tar.gz', repos = NULL, type = 'source')"
     Rscript -e "install.packages(c('latex2exp', 'ggspatial'))"
     Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/terra/terra_1.7-78.tar.gz', repos = NULL, type = 'source')"
     Rscript -e "install.packages('https://cran.r-project.org/src/contrib/Archive/tidyterra/tidyterra_0.6.1.tar.gz', repos = NULL, type = 'source')"
