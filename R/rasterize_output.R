@@ -58,6 +58,8 @@ rasterize_mean <- function(cs_samba) {
   te <- max(cs_samba$pred$time)
   save_folder <- paste0(
     "./output/",
+    gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$state))),
+    "_",
     gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$city))),
     "_",
     format(ts, "%Y%m"),
@@ -71,6 +73,8 @@ rasterize_mean <- function(cs_samba) {
     file = paste0(
       save_folder,
       "inference_predmean_",
+      gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$state))),
+      "_",
       gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$city))),
       "_",
       format(ts, "%Y%m%d%H"),
@@ -90,6 +94,8 @@ rasterize_sd <- function(cs_samba) {
   te <- max(cs_samba$pred$time)
   save_folder <- paste0(
     "./output/",
+    gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$state))),
+      "_",
     gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$city))),
     "_",
     format(ts, "%Y%m"),
@@ -103,6 +109,8 @@ rasterize_sd <- function(cs_samba) {
     file = paste0(
       save_folder,
       "inference_predsd_",
+      gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$state))),
+      "_",
       gsub("[.]", "", gsub("[ ]", "_", tolower(cs_samba$city))),
       "_",
       format(ts, "%Y%m%d%H"),

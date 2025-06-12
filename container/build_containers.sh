@@ -8,3 +8,4 @@
 
 # Recommended to run this script interactively via `sh build_container_samba.sh`
 apptainer build --fakeroot container_samba.sif container_samba.def
+apptainer build --fakeroot container_movies.sif container_movies.def

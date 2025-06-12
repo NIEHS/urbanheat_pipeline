@@ -18,7 +18,7 @@ run_brassens <- function(my_cs) {
     area$area_rect,
     m2_t_distribution = TRUE,
     m3_cutOff = .001,
-    m5_radius = 3000,
+    m5_radius = my_cs$qc_radius,
     m5_n_buddies = 5,
     m5_keep_isolated = TRUE
   )

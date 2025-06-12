@@ -2,7 +2,7 @@
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=30
-#SBATCH --partition=geo
+#SBATCH --partition=highmem
 #SBATCH --output=slurm_messages/slurm-%j.out
 #SBATCH --error=slurm_messages/slurm-%j.err
 

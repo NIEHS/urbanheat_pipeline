@@ -29,6 +29,7 @@ load_cs_cities <- function(ts, te) {
   cs$fch_file <- "./input/forest_height_2019_nam.tif"
   cs$ts <- ts
   cs$te <- te
+  cs$qc_radius <- 3000
   cs$era5_instant_file <- paste0(
     "./input/era5_us_",
     lubridate::year(cs$ts),
@@ -74,6 +75,7 @@ load_cs_states <- function(ts, te) {
   cs$fch_file <- "./input/forest_height_2019_nam.tif"
   cs$ts <- ts
   cs$te <- te
+  cs$qc_radius <- 3000
   cs$era5_instant_file <- paste0(
     "./input/era5_us_",
     lubridate::year(cs$ts),
@@ -124,8 +126,31 @@ cs_jul24 <- load_cs_cities(
   as.POSIXct("2024-07-31 23:00:00", tz = "UTC")
 )[1:101, ]
 cs_jul24 <- cs_jul24[(which(cs_jul24$NAME != "Washington")), ] # no data
+# HCUP cities, jul20
+source("list_cities_hcup.R")
+cs_jul20 <- load_cs_cities(
+  as.POSIXct("2020-07-01 00:00:00", tz = "UTC"),
+  as.POSIXct("2020-07-31 23:00:00", tz = "UTC")
+)
+cs_hcup_jul20 <- cs_jul20[which(
+  cs_jul20$NAME %in% hcup_cities$NAME & cs_jul20$ST %in% hcup_cities$ST
+), ]
 
-cs_list <- rbind(cs_jul23, cs_feb21, cs_apr24, cs_oct20, cs_jul24)
+cs_list <- rbind(
+  cs_jul23,
+  cs_feb21,
+  cs_apr24,
+  cs_oct20,
+  cs_jul24,
+  cs_hcup_jul20
+)
+cs_list <- cs_list[!duplicated(cs_list), ]
+
+# change qc_radius for problematic cases:
+cs_list[which(cs_list$NAME == "San Francisco"), ]$qc_radius <- 1000
+cs_list[which(cs_list$NAME == "Oakland"), ]$qc_radius <- 1000
+cs_list[which(cs_list$NAME == "Los Angeles"), ]$qc_radius <- 1000
+
 write.csv(cs_list, "./input/case_studies_list.csv")
 
 
