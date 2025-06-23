@@ -10,7 +10,17 @@ run_samba <- function(my_cs, cs_bhm_materials) {
     verbose = TRUE,
     debug = TRUE
   )
+  inf_out$info$city <- my_cs$NAME
+  inf_out$info$state <-  my_cs$ST
+  inf_out$info$yyyymm <- paste0(
+    lubridate::year(inf_out$pred$time[1]),
+    sprintf("%02d", lubridate::month(inf_out$pred$time[1]))
+  )
   inf_out$city <- my_cs$NAME
   inf_out$state <- my_cs$ST
+  inf_out$yyyymm <- paste0(
+    lubridate::year(inf_out$pred$time[1]),
+    sprintf("%02d", lubridate::month(inf_out$pred$time[1]))
+  )
   inf_out
 }

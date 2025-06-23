@@ -144,14 +144,79 @@ cs_list <- rbind(
   cs_jul24,
   cs_hcup_jul20
 )
-cs_list <- cs_list[!duplicated(cs_list), ]
+
+# Calculate 5y of data on NYC
+# Loop through years and months to create dataset for the 10 biggest cities
+for (year in 2020:2024) {
+  for (month in 1:12) {
+    month_str <- sprintf("%02d", month)
+    start_date <- as.POSIXct(
+      paste0(year, "-", month_str, "-01 00:00:00"),
+      tz = "UTC"
+    )
+    end_date <- as.POSIXct(
+      paste0(
+        year,
+        "-",
+        sprintf("%02d", month),
+        "-",
+        lubridate::days_in_month(
+          lubridate::ymd(paste0(year, "-", month, "-01"))
+        ),
+        " 23:00:00"
+      ),
+      tz = "UTC"
+    )
+    cities <- load_cs_cities(start_date, end_date)[1, ]
+    cs_list <- rbind(cs_list, cities)
+  }
+}
+
+# Calculate 5y of data on cities #2 to #5
+# Loop through years and months to create dataset for the 10 biggest cities
+for (year in 2020:2024) {
+  for (month in 1:12) {
+    month_str <- sprintf("%02d", month)
+    start_date <- as.POSIXct(
+      paste0(year, "-", month_str, "-01 00:00:00"),
+      tz = "UTC"
+    )
+    end_date <- as.POSIXct(
+      paste0(
+        year,
+        "-",
+        sprintf("%02d", month),
+        "-",
+        lubridate::days_in_month(
+          lubridate::ymd(paste0(year, "-", month, "-01"))
+        ),
+        " 23:00:00"
+      ),
+      tz = "UTC"
+    )
+    cities <- load_cs_cities(start_date, end_date)[2:5, ]
+    cs_list <- rbind(cs_list, cities)
+  }
+}
+
+#remove 11/2024 and 12/2024
+cs_list <- cs_list[
+  !(
+    lubridate::year(cs_list$ts) == 2024 &
+      lubridate::month(cs_list$ts) %in% c(11, 12)
+  ),
+]
+
+
 
 # change qc_radius for problematic cases:
 cs_list[which(cs_list$NAME == "San Francisco"), ]$qc_radius <- 1000
 cs_list[which(cs_list$NAME == "Oakland"), ]$qc_radius <- 1000
 cs_list[which(cs_list$NAME == "Los Angeles"), ]$qc_radius <- 1000
 
+cs_list <- cs_list[!duplicated(cs_list), ]
 write.csv(cs_list, "./input/case_studies_list.csv")
+
 
 
 # for now these case studies are too long to run.
