@@ -1,45 +1,12 @@
-samb_a <- tar_read(cs_samba_6ef2cd1a32e82338)
-samb_b <- tar_read(cs_samba_fc41c525a35777df)
-samb_c <- tar_read(cs_samba_9c7c22545ab666ed)
-samb_d <- tar_read(cs_samba_82276619145a3fe5)
-samb_e <- tar_read(cs_samba_37917116ead31949)
-samb_f <- tar_read(cs_samba_c88df05a208a7668)
-samb_i <- tar_read(cs_samba_016d4e8c7aa90d49)
-samb_j <- tar_read(cs_samba_d43fc715f9ff5a14)
-samb_k <- tar_read(cs_samba_f67f3a912704024c)
-samb_l <- tar_read(cs_samba_1d4b8710f48c334d)
-samb_m <- tar_read(cs_samba_9fe33e48a1eebffd)
-
-info_a <- samb_a$info
-info_b <- samb_b$info
-info_a$city <- samb_a$city
-info_a$state <- samb_a$state
-info_a$yyyymm <- paste0(
-  lubridate::year(samb_a$pred$time[1]),
-  sprintf("%02d", lubridate::month(samb_a$pred$time[1]))
-)
-info_b$city <- samb_b$city
-info_b$state <- samb_b$state
-info_b$yyyymm <- paste0(
-  lubridate::year(samb_b$pred$time[1]),
-  sprintf("%02d", lubridate::month(samb_b$pred$time[1]))
-)
-
-tar_load(my_cs)
-
-info <- rbind(
-  info_a,
-  info_b,
-  samb_c$info,
-  samb_d$info,
-  samb_e$info,
-  samb_f$info,
-  samb_i$info,
-  samb_j$info,
-  samb_k$info,
-  samb_l$info,
-  samb_m$info
-)
+library(ggplot2)
+info_all <- tar_read(combined_cs_samba_info)
+#info <- info_all[which(info_all$city == "New York"), ]
+#info <- info_all[which(info_all$state == "CA"), ]
+info <- info_all[which(info_all$state == "IL"), ]
+#info <- info_all[which(info_all$state == "TX"), ]
+#info <- info_all[which(info_all$city == "Los Angeles"), ]
+#info <- info_all[which(info_all$city == "San Francisco"), ]
+info$month <- substr(info$yyyymm, nchar(info$yyyymm) - 1, nchar(info$yyyymm))
 
 tvar_coeffs <- info |>
   dplyr::select(starts_with("local_hour"), "city", "state", "yyyymm") |>
@@ -59,7 +26,11 @@ tvar_coeffs <- tvar_coeffs |>
     names_from = stat,               # Column to use for new column names
     values_from = value              # Column to use for values
   )
-
+tvar_coeffs$month <- substr(
+  tvar_coeffs$yyyymm,
+  nchar(tvar_coeffs$yyyymm) - 1,
+  nchar(tvar_coeffs$yyyymm)
+)
 
 var <- c("elev", "fch", "imp")
 prior_mean <- c(-0.006, 0, 0)
@@ -112,8 +83,10 @@ p_tvar_coeffs <- ggplot(tvar_coeffs) +
     x = local_hour,
     y = mean,
     color = city,
+    #color = month,
     group = interaction(city, state, yyyymm),
-    linetype = yyyymm
+    linetype = month,
+    #linetype = city
   )) +
   geom_ribbon(
     aes(
@@ -121,9 +94,10 @@ p_tvar_coeffs <- ggplot(tvar_coeffs) +
       ymin = mean - 2 * sd,
       ymax = mean + 2 * sd,
       fill = city,
+      #fill = month,
       group = interaction(city, state, yyyymm)
     ),
-    alpha = 0.1
+    alpha = 0.05
   ) +
   geom_blank(data = blank_df, aes(x = x, y = y)) +
   facet_wrap(vars(tvar), nrow = 3, scales = "free_y") +
@@ -155,11 +129,12 @@ p_tvar_coeffs <- ggplot(tvar_coeffs) +
     legend.title = element_text(size = 18),
     panel.background = element_rect(fill = "white"),
     panel.grid.major = element_line(colour = "grey")
-  )
+  ) #+
+  #theme(legend.position = "none")
 p_tvar_coeffs
 ggsave(
   plot = p_tvar_coeffs,
-  file = "my_marginals/test.png",
+  file = "my_marginals/chicago.png",
   width = 10,
   heigh = 10
 )
