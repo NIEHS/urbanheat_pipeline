@@ -38,7 +38,7 @@ targets::tar_option_set(
     spec_packages,
     c(
       "crew.cluster",
-      "data.table",
+      "data.table", 
       "lubridate",
       "sf",
       "targets"
@@ -74,3 +74,4 @@ list(
   target_data_creation,
   target_rasters_storage
 )
+

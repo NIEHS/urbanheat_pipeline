@@ -53,5 +53,26 @@ target_data_creation <- list(
     pattern = map(my_cs, cs_bhm_materials),
     iteration = "list",
     format = "rds"
+  ),
+  tar_target(
+    name = combined_cs_samba_info,
+    command = {
+      # Combine all `cs_samba$info` data frames from dynamic branches
+      dplyr::bind_rows(cs_samba$info)
+    },
+    pattern = map(cs_samba),
+    iteration = "vector",  # Ensure all branches are processed together
+    format = "rds"
+  ),
+  tar_target(
+    name = write_combined_cs_samba_info,
+    command = {
+      write.csv(
+        combined_cs_samba_info,
+        "output_combined_info.csv",
+        row.names = FALSE
+      )
+    },
+    format = "file"
   )
 )
